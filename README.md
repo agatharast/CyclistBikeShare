@@ -1,4 +1,4 @@
-# CyclistBikeShare
+# Cyclist Bike-Share
 A case study from Google Data Analytics on Coursera
 
 In this case study, we follow the steps bellow:
