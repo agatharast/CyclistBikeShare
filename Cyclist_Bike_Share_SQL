@@ -1,0 +1,87 @@
+----- Step 1 : Combine all data into a table -----
+
+CREATE TABLE CyclistBike.CyclistData AS
+(SELECT *
+FROM `CyclistBike.Cyclist01`
+UNION ALL
+
+SELECT *
+FROM `CyclistBike.Cyclist02`
+UNION ALL
+
+SELECT *
+FROM `CyclistBike.Cyclist03`
+UNION ALL
+
+SELECT *
+FROM `CyclistBike.Cyclist04`
+UNION ALL
+
+SELECT *
+FROM `CyclistBike.Cyclist5`);
+
+SELECT count(1)
+FROM `CyclistBike.CyclistData`;
+
+
+-----Step 2 : Check the data for anomalies-----
+
+SELECT DISTINCT member_casual AS Member_Type
+FROM `CyclistBike.CyclistData`;
+
+SELECT min(start_lng) AS Min_Start_Length,
+  max(start_lng) AS Max_Start_Length,
+  min(end_lng) AS Min_End_Length,
+  max(end_lng) AS Max_End_Length,
+  min(start_lat) AS Min_Start_Lat,
+  max(start_lat) AS Max_Start_Lat,
+  min(end_lat) AS Min_End_Lat,
+  max(end_lat) AS Max_End_Lat
+FROM `CyclistBike.CyclistData`;
+
+SELECT end_station_id, end_station_name, count(1) AS count
+FROM `CyclistBike.CyclistData`
+WHERE end_station_id IS NOT NULL AND end_station_name IS NOT NULL
+GROUP BY end_station_id, end_station_name;
+
+SELECT rideable_type, count(1) AS count
+FROM `CyclistBike.CyclistData`
+GROUP BY rideable_type;
+
+---Check if the data contains NULL---
+
+SELECT *
+FROM `CyclistBike.CyclistData`
+WHERE started_at IS NULL AND ended_at IS NULL;
+
+SELECT *
+FROM `CyclistBike.CyclistData`
+WHERE started_at IS NULL OR ended_at IS NULL;
+
+SELECT *
+FROM `CyclistBike.CyclistData`
+WHERE start_lat IS NULL AND end_lat IS NULL;
+
+SELECT *
+FROM `CyclistBike.CyclistData`
+WHERE start_lng IS NULL AND end_lng IS NULL;
+
+SELECT *
+FROM `CyclistBike.CyclistData`
+WHERE member_casual IS NULL;
+
+SELECT *
+FROM `CyclistBike.CyclistData`
+WHERE rideable_type IS NULL;
+
+--Make sure that all data we use not contains NULL--
+
+
+-----Step 3: Clean the data-----
+
+--Filter data: not contains NULL and started time less than ended time--
+SELECT *
+FROM `CyclistBike.CyclistData`
+WHERE start_station_name IS NOT NULL AND start_station_id IS NOT NULL AND end_station_name is NOT NULL AND end_station_id IS NOT NULL AND start_lng IS NOT NULL AND start_lat IS NOT NULL AND end_lng IS NOT NULL AND end_lat IS NOT NULL AND started_at <= ended_at AND rideable_type IS NOT NULL;
+
+--Download the data and use in Tableau--
